@@ -4,6 +4,18 @@
   "image": "https://avatars.githubusercontent.com/u/53482087?v=4",
   "attributes": [
     {
+      "trait_type": "Level", 
+      "value": 99
+    }, 
+    {
+      "trait_type": "Stamina", 
+      "value": 99999
+    }, 
+    {
+      "trait_type": "Personality", 
+      "value": "Anger"
+    }, 
+    {
       "trait_type": "Music Genre", 
       "value": "Rock, Power Metal, EDM"
     }, 
