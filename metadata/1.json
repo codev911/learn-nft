@@ -1,0 +1,36 @@
+{
+  "name": "NFT Trial",
+  "description": "This my first nft developed, follow 'codev911' on github",
+  "image": "https://avatars.githubusercontent.com/u/53482087?v=4",
+  "attributes": [
+    {
+      "trait_type": "Music Genre", 
+      "value": "Rock, Power Metal, EDM"
+    }, 
+    {
+      "display_type": "Skill",
+      "trait_type": "HTML", 
+      "value": 8
+    },
+    {
+      "display_type": "Skill",
+      "trait_type": "CSS", 
+      "value": 7
+    },
+    {
+      "display_type": "Skill",
+      "trait_type": "PHP", 
+      "value": 8
+    },
+    {
+      "display_type": "Skill",
+      "trait_type": "JS", 
+      "value": 7
+    },
+    {
+      "display_type": "Skill",
+      "trait_type": "Solidity", 
+      "value": 8
+    }
+  ]
+}
