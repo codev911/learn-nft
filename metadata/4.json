@@ -1,0 +1,29 @@
+{
+  "name": "NFT Troll",
+  "description": "This my thirt nft developed, follow 'codev911' on github",
+  "image": "https://4.bp.blogspot.com/-lHYmgvVeTAw/UopnLO8ddEI/AAAAAAAAEvA/cEGvMZJtMa8/s1600/troll-face-itch-bum-dancing-ant-pants-dance-trollface.gif",
+  "attributes": [
+    {
+      "trait_type": "Level", 
+      "value": 99
+    }, 
+    {
+      "trait_type": "Stamina", 
+      "value": 99999
+    }, 
+    {
+      "trait_type": "Personality", 
+      "value": "funny"
+    }, 
+    {
+      "display_type": "number",
+      "trait_type": "attack", 
+      "value": 95
+    },
+    {
+      "display_type": "boost_percentage",
+      "trait_type": "critical changes", 
+      "value": 20
+    }
+  ]
+}
