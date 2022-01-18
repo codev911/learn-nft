@@ -21,16 +21,6 @@
       "value": 95
     },
     {
-      "display_type": "number",
-      "trait_type": "defence", 
-      "value": 75
-    },
-    {
-      "display_type": "number",
-      "trait_type": "agility", 
-      "value": 88
-    },
-    {
       "display_type": "boost_percentage",
       "trait_type": "critical changes", 
       "value": 20
