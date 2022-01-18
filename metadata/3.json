@@ -16,7 +16,7 @@
       "value": "funny"
     }, 
     {
-      "display_type": "number"
+      "display_type": "number",
       "trait_type": "attack", 
       "value": 95
     },
