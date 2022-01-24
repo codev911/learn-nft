@@ -312,7 +312,7 @@ contract ERC1155 is Ownable, ERC165, IERC1155, IERC1155MetadataURI {
         unchecked{
             uint256 supply;
 
-            for(uint256 a; a < _lastID; a++){
+            for(uint256 a; a <= _lastID; a++){
                 supply += _totalSupply[a];
             }
 
