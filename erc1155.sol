@@ -282,6 +282,7 @@ contract ERC1155 is Ownable, ERC165, IERC1155, IERC1155MetadataURI {
     mapping(uint256 => uint256) private _totalSupply;
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
+    uint256 private _lastID;
     string private _name;
     string private _symbol;
     string private _uri;
@@ -307,6 +308,18 @@ contract ERC1155 is Ownable, ERC165, IERC1155, IERC1155MetadataURI {
         return _symbol;
     }
 
+    function totalSupply() public view virtual returns (uint256) {
+        unchecked{
+            uint256 supply;
+
+            for(uint256 a; a < _lastID; a++){
+                supply += _totalSupply[a];
+            }
+
+            return supply;
+        }
+    }
+
     function totalSupply(uint256 id) public view virtual returns (uint256) {
         return _totalSupply[id];
     }
@@ -316,10 +329,7 @@ contract ERC1155 is Ownable, ERC165, IERC1155, IERC1155MetadataURI {
     }
 
     function uri(uint256 id) public view virtual override returns (string memory) {
-        require(
-            exists(id),
-            "ERC1155: this id is not minted"
-        );
+        require(exists(id), "ERC1155: this id is not minted");
         return string(abi.encodePacked(_uri, id.toString()));
     }
 
@@ -355,55 +365,31 @@ contract ERC1155 is Ownable, ERC165, IERC1155, IERC1155MetadataURI {
     }
 
     function burn(
-        address account,
         uint256 id,
         uint256 value
-    ) public virtual onlyOwner {
-        require(
-            account == _msgSender() || isApprovedForAll(account, _msgSender()),
-            "ERC1155: caller is not owner nor approved"
-        );
-
-        _burn(account, id, value);
+    ) public virtual {
+        _burn(_msgSender(), id, value);
     }
 
     function burnBatch(
-        address account,
         uint256[] memory ids,
         uint256[] memory values
-    ) public virtual onlyOwner {
-        require(
-            account == _msgSender() || isApprovedForAll(account, _msgSender()),
-            "ERC1155: caller is not owner nor approved"
-        );
-
-        _burnBatch(account, ids, values);
+    ) public virtual {
+        _burnBatch(_msgSender(), ids, values);
     }
 
     function mint(
-        address account,
         uint256 id,
         uint256 value
-    ) public virtual onlyOwner {
-        require(
-            account == _msgSender() || isApprovedForAll(account, _msgSender()),
-            "ERC1155: caller is not owner nor approved"
-        );
-
-        _mint(account, id, value, "");
+    ) public virtual {
+        _mint(_msgSender(), id, value, "");
     }
 
     function mintBatch(
-        address account,
         uint256[] memory ids,
         uint256[] memory values
-    ) public virtual onlyOwner {
-        require(
-            account == _msgSender() || isApprovedForAll(account, _msgSender()),
-            "ERC1155: caller is not owner nor approved"
-        );
-
-        _mintBatch(account, ids, values, "");
+    ) public virtual {
+        _mintBatch(_msgSender(), ids, values, "");
     }
 
     function safeTransferFrom(
@@ -442,6 +428,7 @@ contract ERC1155 is Ownable, ERC165, IERC1155, IERC1155MetadataURI {
         bytes memory data
     ) internal virtual {
         require(to != address(0), "ERC1155: transfer to the zero address");
+        require(exists(id), "ERC1155: this id is not minted");
 
         address operator = _msgSender();
 
@@ -478,6 +465,7 @@ contract ERC1155 is Ownable, ERC165, IERC1155, IERC1155MetadataURI {
             uint256 amount = amounts[i];
 
             uint256 fromBalance = _balances[id][from];
+            require(exists(id), "ERC1155: this id is not minted");
             require(fromBalance >= amount, "ERC1155: insufficient balance for transfer");
             unchecked {
                 _balances[id][from] = fromBalance - amount;
@@ -490,7 +478,7 @@ contract ERC1155 is Ownable, ERC165, IERC1155, IERC1155MetadataURI {
         _doSafeBatchTransferAcceptanceCheck(operator, from, to, ids, amounts, data);
     }
 
-    function _setURI(string memory newuri) internal virtual {
+    function _setURI(string memory newuri) onlyOwner internal virtual {
         _uri = newuri;
     }
 
@@ -499,7 +487,7 @@ contract ERC1155 is Ownable, ERC165, IERC1155, IERC1155MetadataURI {
         uint256 id,
         uint256 amount,
         bytes memory data
-    ) internal virtual {
+    ) internal virtual onlyOwner {
         require(to != address(0), "ERC1155: mint to the zero address");
 
         address operator = _msgSender();
@@ -517,7 +505,7 @@ contract ERC1155 is Ownable, ERC165, IERC1155, IERC1155MetadataURI {
         uint256[] memory ids,
         uint256[] memory amounts,
         bytes memory data
-    ) internal virtual {
+    ) internal virtual onlyOwner {
         require(to != address(0), "ERC1155: mint to the zero address");
         require(ids.length == amounts.length, "ERC1155: ids and amounts length mismatch");
 
@@ -538,8 +526,9 @@ contract ERC1155 is Ownable, ERC165, IERC1155, IERC1155MetadataURI {
         address from,
         uint256 id,
         uint256 amount
-    ) internal virtual {
+    ) internal virtual onlyOwner {
         require(from != address(0), "ERC1155: burn from the zero address");
+        require(exists(id), "ERC1155: this id is not minted");
 
         address operator = _msgSender();
 
@@ -558,7 +547,7 @@ contract ERC1155 is Ownable, ERC165, IERC1155, IERC1155MetadataURI {
         address from,
         uint256[] memory ids,
         uint256[] memory amounts
-    ) internal virtual {
+    ) internal virtual onlyOwner {
         require(from != address(0), "ERC1155: burn from the zero address");
         require(ids.length == amounts.length, "ERC1155: ids and amounts length mismatch");
 
@@ -571,6 +560,7 @@ contract ERC1155 is Ownable, ERC165, IERC1155, IERC1155MetadataURI {
             uint256 amount = amounts[i];
 
             uint256 fromBalance = _balances[id][from];
+            require(exists(id), "ERC1155: this id is not minted");
             require(fromBalance >= amount, "ERC1155: burn amount exceeds balance");
             unchecked {
                 _balances[id][from] = fromBalance - amount;
@@ -647,6 +637,10 @@ contract ERC1155 is Ownable, ERC165, IERC1155, IERC1155MetadataURI {
         uint256[] memory ids,
         uint256[] memory amounts
     ) internal virtual {
+        if(ids[ids.length-1] > _lastID){
+            _lastID = ids[ids.length-1];
+        }
+        
         if (from == address(0)) {
             for (uint256 i = 0; i < ids.length; ++i) {
                 _totalSupply[ids[i]] += amounts[i];
